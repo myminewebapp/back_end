@@ -2,9 +2,14 @@
   "name": "backend_mymine",
   "version": "1.0.0",
   "description": "back_end",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prestart": "start mongod --config ./data/mongod.cfg",
+    "start": "node server.js",
+    "poststart": "start mongo admin --eval \"db.getSiblingDB('admin').shutdownServer()\"",
+    "pretest": "start mongod --dbpath data",
+    "test": "mocha test",
+    "posttest": "start mongo admin --eval \"db.getSiblingDB('admin').shutdownServer()\""
   },
   "repository": {
     "type": "git",
@@ -17,6 +22,10 @@
   },
   "homepage": "https://github.com/myminewebapp/back_end#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "mongoose": "^5.3.11",
+    "nodemon": "^1.18.6"
   }
 }
