@@ -39,9 +39,10 @@ mymineRoutes.route('/memory/:id').get(function (req, res) {
       }else{
         res.json(result);
       }
-    }).populate('owner_account').exec((err, account) => {
-      console.log(account);
     });
+    // .populate('owner_account').exec((err, account) => {
+    //   console.log(account);
+    // });
   }
 });
 
@@ -88,6 +89,7 @@ mymineRoutes.route('/memory/').post(function (req, res) {
         let memory = {
           owner_account: account_result._id,
           meesage: meesage_data,
+          date: Date.now()
         }
         MemoryModel.create(memory, function (err, result) {
           if (err) {
@@ -96,6 +98,23 @@ mymineRoutes.route('/memory/').post(function (req, res) {
             res.json(result);
           }
         });
+      }
+    });
+  }
+});
+
+//delete memory (isDelete = true)
+mymineRoutes.route('/memory/:id').delete(function (req, res) {
+  let id = req.params.id;
+  if(!ObjectId.isValid(id)){
+    res.json("No record exist")
+  }
+  else{
+    MemoryModel.findByIdAndUpdate(id, {is_delete : true}, function (err, result) {
+      if (err) {
+        res.json(err);
+      }else{
+        res.json(result);
       }
     });
   }

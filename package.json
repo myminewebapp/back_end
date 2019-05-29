@@ -22,9 +22,10 @@
   },
   "homepage": "https://github.com/myminewebapp/back_end#readme",
   "dependencies": {
-    "express": "^4.17.1",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "moment-timezone": "^0.5.25",
     "mongoose": "^5.3.11",
     "nodemon": "^1.18.6"
   }

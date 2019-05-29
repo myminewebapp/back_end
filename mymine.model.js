@@ -17,20 +17,13 @@ let Memory = new Schema({
     ref: 'Account'
   },
   date: {
-    type: Date, 
-    default: Date.now
+    type: Date
   },
   meesage: String,
-  // delete: {
-  //   is_delete: {
-  //     type: Boolean,
-  //     default: false
-  //   },
-  //   expires_recovery: {
-  //     type: Date, 
-  //     default: Date.now
-  //   }
-  // } 
+  is_delete: {
+    type: Boolean,
+    default: false
+  } 
 });
 
 module.exports = {
