@@ -12,7 +12,10 @@ let Account = new Schema({
 });
 
 let Memory = new Schema({
-  owner_account: Schema.ObjectId,
+  owner_account: {
+    type: Schema.ObjectId,
+    ref: 'Account'
+  },
   date: {
     type: Date, 
     default: Date.now
