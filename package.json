@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.3.11",
+    "morgan": "^1.9.1",
     "nodemon": "^1.18.6"
   }
 }

@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = 4000;
 const cors = require('cors');
+const morgan = require('morgan')
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const db = require('./mymine.db.js');
@@ -18,6 +19,7 @@ mongoose.connect(db.endpoint, { useCreateIndex: true, useNewUrlParser: true, use
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(morgan('combined'));
 app.use(cookieParser());
 
 app.use('/mymine/api', mymineRoute);
