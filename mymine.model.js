@@ -56,7 +56,7 @@ const Memory = new Schema({
   date: {
     type: Date,
   },
-  meesage: {
+  message: {
     type: String, 
   },
   is_delete: {

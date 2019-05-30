@@ -8,6 +8,7 @@ module.exports = {
     }, 
     normal: {
         regisComplete : 10,
-        loginComplete : 20
+        loginComplete : 20,
+        createMemorySuccess: 30
     }
 }

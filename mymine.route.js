@@ -23,7 +23,7 @@ mymineRoutes.route('/timeline/:id').get(function (req, res) {
   }
   else{
     let accountID = new ObjectId(req.params.id);
-    MemoryModel.find({owner_account: accountID}, function (err, result) {
+    MemoryModel.find({owner_account: accountID}).sort('-date').limit(3).exec(function (err, result) {
       if (err) {
         res.json(resJsonGen(err,CODE.error.other));
       }else{
@@ -43,7 +43,27 @@ mymineRoutes.route('/memory/:id').get(function (req, res) {
   }
   else{
     let accountID = new ObjectId(req.params.id);
-    MemoryModel.find({owner_account: accountID}, function (err, result) {
+    MemoryModel.find({owner_account: accountID}).sort('-date').exec(function (err, result) {
+      if (err) {
+        res.json(resJsonGen(err,CODE.error.other));
+      }else{
+        res.json(result);
+      }
+    });
+    // .populate('owner_account').exec((err, account) => {
+    //   console.log(account);
+    // });
+  }
+});
+
+//get all delete memories by account id
+mymineRoutes.route('/memory/delete/:id').get(function (req, res) {
+  if(!ObjectId.isValid(req.params.id)){
+    res.json(resJsonGen('Invalid id pattern.',CODE.error.objectIdInvalid));
+  }
+  else{
+    let accountID = new ObjectId(req.params.id);
+    MemoryModel.find({owner_account: accountID,is_delete: true}).sort('-date').exec(function (err, result) {
       if (err) {
         res.json(resJsonGen(err,CODE.error.other));
       }else{
@@ -110,10 +130,10 @@ mymineRoutes.route('/register').post(function (req, res) {
 
 //create memory
 mymineRoutes.route('/memory/').post(function (req, res) {
-  let {owner_account, meesage_data} = req.body;
-  if((owner_account == "" || owner_account === undefined) && 
-     (meesage_data == "" || meesage_data === undefined)){
-      res.json(resJsonGen('owner_account, meesage_data field required!!',CODE.error.fieldReq)); 
+  let {owner_account, message_data} = req.body;
+  if((owner_account === "" || owner_account === undefined) || 
+     (message_data === "" || message_data === undefined)){
+      res.json(resJsonGen('owner_account, message_data field required!!',CODE.error.fieldReq)); 
   }else{
     if(!ObjectId.isValid(owner_account)){
       res.json(resJsonGen('Invalid id pattern.',CODE.error.objectIdInvalid));
@@ -125,14 +145,15 @@ mymineRoutes.route('/memory/').post(function (req, res) {
         }else{
           let memory = {
             owner_account: account_result._id,
-            meesage: meesage_data,
+            message: message_data,
             date: Date.now()
           }
           MemoryModel.create(memory, function (err, result) {
             if (err) {
               res.json(resJsonGen(err,CODE.error.other));
             }else{
-              res.json(result);
+              // res.json(result);
+              res.json(resJsonGen("Create memory success",CODE.normal.createMemorySuccess));
             }
           });
         }
