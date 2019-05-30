@@ -56,6 +56,16 @@ mymineRoutes.route('/memory/:id').get(function (req, res) {
   }
 });
 
+// mymineRoutes.route('/memoryAll').get(function (req, res) {
+//   MemoryModel.find((err, result) => {
+//     if (err) {
+//       res.json(resJsonGen(err,CODE.error.other));
+//     }else{
+//       res.json(result);
+//     }
+//   });
+// });
+
 //get profile data by account id
 mymineRoutes.route('/profile/:id').get(function (req, res) {
   if(!ObjectId.isValid(req.params.id)){

@@ -8,6 +8,15 @@ const withAuth = require('./middleware');
 
 const secret = 'mysecretsshhh';
 
+const CODE = require('./mymine.res.code');
+
+let resJsonGen = (resMsg, code) => {
+  return {
+    res : resMsg,
+    code : code
+  }
+};
+
 mymineAuthRoutes.route('/').post(function(req, res) {
   const { email, password } = req.body;
   AccountModel.findOne({ email }, function(err, account) {
@@ -19,9 +28,7 @@ mymineAuthRoutes.route('/').post(function(req, res) {
       });
     } else if (!account) {
       res.status(401)
-        .json({
-        error: 'Incorrect email or password'
-      });
+      .json(resJsonGen('Incorrect email or password',CODE.error.noMatchAccount));
     } else {
       account.isCorrectPassword(password, function(err, same) {
         if (err) {
@@ -30,10 +37,7 @@ mymineAuthRoutes.route('/').post(function(req, res) {
             error: 'Internal error please try again'
           });
         } else if (!same) {
-          res.status(401)
-            .json({
-            error: 'Incorrect email or password'
-          });
+          res.status(401).json(resJsonGen('Incorrect email or password',CODE.error.noMatchAccount));
         } else {
           // Issue token
           const payload = { email };
@@ -48,7 +52,18 @@ mymineAuthRoutes.route('/').post(function(req, res) {
 });
 
 mymineAuthRoutes.route('/checkToken').get(withAuth, function(req, res) {
+  console.log(req.email);
   res.sendStatus(200);
+});
+
+mymineAuthRoutes.route('/account').get(withAuth, function(req, res) {
+  AccountModel.findOne({email : req.email}, function (err, account) {
+    if (err) {
+      res.json(resJsonGen(err,CODE.error.other));
+    }else{
+      res.json({account});
+    }
+  });
 });
 
 module.exports = mymineAuthRoutes;
