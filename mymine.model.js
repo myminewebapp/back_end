@@ -5,13 +5,20 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const Account = new Schema({
-  firstName: String,
-  lastName: String,
+  firstName: {
+    type: String, 
+  },
+  lastName: {
+    type: String, 
+  },
   email: { 
     type: String, 
     lowercase: true, 
-    unique: true },
-  password: String 
+    unique: true, 
+  },
+  password: {
+    type: String, 
+  }
 });
 
 Account.pre('save', function(next) {
@@ -44,12 +51,14 @@ Account.methods.isCorrectPassword = function(password, callback) {
 const Memory = new Schema({
   owner_account: {
     type: Schema.ObjectId,
-    ref: 'Account'
+    ref: 'Account',
   },
   date: {
-    type: Date
+    type: Date,
   },
-  meesage: String,
+  meesage: {
+    type: String, 
+  },
   is_delete: {
     type: Boolean,
     default: false
