@@ -1,25 +1,67 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const bcrypt = require('bcrypt');
 
-let Account = new Schema({
-  firstName: String,
-  lastName: String,
+const saltRounds = 10;
+
+const Account = new Schema({
+  firstName: {
+    type: String, 
+  },
+  lastName: {
+    type: String, 
+  },
   email: { 
     type: String, 
     lowercase: true, 
-    unique: true },
-  password: String 
+    unique: true, 
+  },
+  password: {
+    type: String, 
+  }
 });
 
-let Memory = new Schema({
+Account.pre('save', function(next) {
+  if (this.isNew || this.isModified('password')) {
+    const document = this;
+    bcrypt.hash(this.password, saltRounds, function(err, hashedPassword) {
+      if (err) {
+        next(err);
+      } else {
+        document.password = hashedPassword;
+        next();
+      }
+    });
+  } else {
+    next();
+  }
+});
+
+Account.methods.isCorrectPassword = function(password, callback) {
+  bcrypt.compare(password, this.password, function(err, same) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(err, same);
+    }
+  });
+};
+
+
+const Memory = new Schema({
   owner_account: {
     type: Schema.ObjectId,
-    ref: 'Account'
+    ref: 'Account',
   },
   date: {
-    type: Date
+    type: Date,
   },
-  meesage: String,
+  message: {
+    type: String, 
+  },
+  emojiValue: {
+    type: Number, 
+  },
   is_delete: {
     type: Boolean,
     default: false
