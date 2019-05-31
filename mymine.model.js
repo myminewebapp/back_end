@@ -59,6 +59,9 @@ const Memory = new Schema({
   message: {
     type: String, 
   },
+  emojiValue: {
+    type: Number, 
+  },
   is_delete: {
     type: Boolean,
     default: false

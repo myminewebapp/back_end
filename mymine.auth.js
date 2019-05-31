@@ -66,4 +66,9 @@ mymineAuthRoutes.route('/account').get(withAuth, function(req, res) {
   });
 });
 
+mymineAuthRoutes.route('/logout').get(function(req, res) {
+  // res.sendStatus(200);
+    res.cookie('token', '', { httpOnly: true }).sendStatus(200);
+});
+
 module.exports = mymineAuthRoutes;

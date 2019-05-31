@@ -23,7 +23,7 @@ mymineRoutes.route('/timeline/:id').get(function (req, res) {
   }
   else{
     let accountID = new ObjectId(req.params.id);
-    MemoryModel.find({owner_account: accountID}).sort('-date').limit(3).exec(function (err, result) {
+    MemoryModel.find({owner_account: accountID, is_delete: false}).sort('-date').limit(3).exec(function (err, result) {
       if (err) {
         res.json(resJsonGen(err,CODE.error.other));
       }else{
@@ -43,7 +43,7 @@ mymineRoutes.route('/memory/:id').get(function (req, res) {
   }
   else{
     let accountID = new ObjectId(req.params.id);
-    MemoryModel.find({owner_account: accountID}).sort('-date').exec(function (err, result) {
+    MemoryModel.find({owner_account: accountID, is_delete: false}).sort('-date').exec(function (err, result) {
       if (err) {
         res.json(resJsonGen(err,CODE.error.other));
       }else{
@@ -130,9 +130,10 @@ mymineRoutes.route('/register').post(function (req, res) {
 
 //create memory
 mymineRoutes.route('/memory/').post(function (req, res) {
-  let {owner_account, message_data} = req.body;
+  let {owner_account, message_data, emojiValue} = req.body;
   if((owner_account === "" || owner_account === undefined) || 
-     (message_data === "" || message_data === undefined)){
+     (message_data === "" || message_data === undefined) || 
+     (emojiValue === "" || emojiValue === undefined)){
       res.json(resJsonGen('owner_account, message_data field required!!',CODE.error.fieldReq)); 
   }else{
     if(!ObjectId.isValid(owner_account)){
@@ -146,7 +147,8 @@ mymineRoutes.route('/memory/').post(function (req, res) {
           let memory = {
             owner_account: account_result._id,
             message: message_data,
-            date: Date.now()
+            date: Date.now(),
+            emojiValue: emojiValue
           }
           MemoryModel.create(memory, function (err, result) {
             if (err) {
